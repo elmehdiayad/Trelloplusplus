@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TreDev settings page</title>
+	<link rel="stylesheet" href="options.css">
+</head>
+
+<body>
+  <div id="authorize">
+    <p>You are not authorized yet</p>
+    <a href="#" id="authorize-button">Authorize</a><br />
+  </div>
+  <div id="deauthorize" style="display: none">
+    <p>You are already authorized</p>
+    <a href="#" id="deauthorize-button">Log out</a><br />
+  </div>
+  <script src="../lib/jquery.js"></script>
+  <script src="../scripts/key.js"></script>
+  <script src="options.js"></script>
+  <script src="https://api.trello.com/1/client.js?key=23ae2ad25ad0c4a9e5459765ca6f3333"></script>
+  <script src="../lib/hashSearch.js"></script>
+
+</body>
+
+</html>

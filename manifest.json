@@ -1,0 +1,28 @@
+{
+	"name": "TreDev",
+	"version": "1.0.0",
+	"manifest_version" : 2,
+	"description": "TreDev helps you use trello as a developer",
+	"background" : {
+			"page" : "background.html",
+			"persistent": false
+	},
+	"content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": [
+                "lib/jquery.js"
+            ],
+            "run_at": "document_idle"
+        }
+    ],
+	"permissions": [
+			"tabs"
+	],
+	"web_accessible_resources": [
+			"options/options.html"
+	],
+	"options_page": "options/options.html",
+	"content_security_policy": "script-src 'self' https://api.trello.com; object-src 'self'"
+
+}
