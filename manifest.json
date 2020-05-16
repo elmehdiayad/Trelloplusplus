@@ -1,28 +1,24 @@
 {
-	"name": "TreDev",
-	"version": "1.0.0",
-	"manifest_version" : 2,
-	"description": "TreDev helps you use trello as a developer",
-	"background" : {
-			"page" : "background.html",
-			"persistent": false
-	},
-	"content_scripts": [
-        {
-            "matches": ["<all_urls>"],
-            "js": [
-                "lib/jquery.js"
-            ],
-            "run_at": "document_idle"
-        }
-    ],
-	"permissions": [
-			"tabs"
-	],
-	"web_accessible_resources": [
-			"options/options.html"
-	],
-	"options_page": "options/options.html",
-	"content_security_policy": "script-src 'self' https://api.trello.com; object-src 'self'"
-
+  "name": "Trello++",
+  "version": "1.0.0",
+  "manifest_version": 2,
+  "description": "Trello++ helps you use trello as a developer",
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["lib/jquery.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["tabs"],
+  "browser_action": {
+    "default_popup": "popup/popup.html"
+  },
+  "web_accessible_resources": ["options/options.html"],
+  "options_page": "options/options.html",
+  "content_security_policy": "script-src 'self' https://api.trello.com https://cdn.jsdelivr.net 'unsafe-eval'; object-src 'self'"
 }

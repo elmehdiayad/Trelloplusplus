@@ -1,11 +1,23 @@
 function init() {
   if (HashSearch.keyExists("token")) {
     Trello.authorize({
-      name: "TreDev",
+      name: "Trello++",
       expiration: "never",
       interactive: false,
       scope: { read: true, write: false },
-      success: function () {},
+      success: () => {
+        chrome.extension.sendMessage(
+          {
+            command: "saveToken",
+            token: localStorage.getItem("trello_token"),
+          },
+          () => {
+            chrome.tabs.getCurrent(function (tab) {
+              chrome.tabs.remove(tab.id);
+            });
+          }
+        );
+      },
       error: function () {
         alert("Failed to authorize with Trello.");
       },
@@ -18,7 +30,7 @@ function init() {
   // Log in button
   $("#authorize-button").click(function () {
     Trello.authorize({
-      name: "TreDev",
+      name: "Trello++",
       type: "redirect",
       expiration: "never",
       interactive: true,
@@ -35,6 +47,7 @@ function init() {
   // Log out button
   $("#deauthorize-button").click(function () {
     Trello.deauthorize();
+    localStorage.clear();
     location.reload();
   });
 
