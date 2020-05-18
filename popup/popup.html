@@ -4,23 +4,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Trello++</title>
   <link rel="stylesheet" href="popup.css">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
 </head>
 
 <body>
+  <div id="trelloplusplus">
+    <v-app>
+      <v-system-bar window>
+        <span class="body-1">Trello++</span>
+        <v-spacer></v-spacer>
+        <a href="/options/options.html" target="_blank" class="d-flex flex-row">
+          <v-icon>mdi-account-outline</v-icon>
+        </a>
+        <v-icon @click="fetch">mdi-refresh</v-icon>
+      </v-system-bar>
+      <v-content>
+        <v-container>
+          <v-select v-model="selectedBoard" @change="filterByBoardId(selectedBoard)" :items="boards"
+            label="Choose a board" item-text="name" item-value="id">
+          </v-select>
 
-  <div id="loggedin">
-    <div id="header">
-      Logged in to as <span id="fullName"></span>
-    </div>
-    <div id="output"></div>
+          <v-expansion-panels>
+            <v-expansion-panel v-for="card in filtredCards" :key="card.id">
+              <v-expansion-panel-header hide-actions>
+                {{card.name}}
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                {{card.desc}}
+              </v-expansion-panel-content>
+              <v-card-actions class="d-flex">
+                <v-btn small text @click="move(card)">Code Reveiw</v-btn>
+                <v-btn small text>Blocked</v-btn>
+                <div class="ml-auto mr-2">
+                  <a :href="card.shortUrl" target="_blank">
+                    <v-icon small @click="copie(card)">mdi-open-in-new</v-icon>
+                  </a>
+                  <v-icon small @click="copie(card)">mdi-content-copy</v-icon>
+                </div>
+              </v-card-actions>
+
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-container>
+      </v-content>
+    </v-app>
   </div>
-  <button id="fetch">fetch cards</button>
-  
-
   <script src="../lib/jquery.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
   <script src="https://api.trello.com/1/client.js?key=23ae2ad25ad0c4a9e5459765ca6f3333"></script>
   <script src="popup.js"></script>
 

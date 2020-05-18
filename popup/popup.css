@@ -1,7 +1,16 @@
 body {
   font-family: arial;
   font-size: 12px;
-  width: 300px;
+  width: 370px;
+  height: 400px;
+}
+
+a {
+  text-decoration: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 #header {
@@ -10,14 +19,12 @@ body {
   background: #eee;
 }
 
-#output {
-  padding: 4px;
+.v-icon.notranslate.v-icon--link.mdi.mdi-refresh.theme--light:after {
+  height: 24px;   
+  background-color: #1976d2;
 }
 
-.card { 
-  display: block; 
-  padding: 2px;
-  cursor: pointer;
+.v-icon.notranslate.v-icon--link.mdi.mdi-refresh.theme--light:active {
+  transform:rotate(360deg);
+  transition: linear 150ms;
 }
-
-
