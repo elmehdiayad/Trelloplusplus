@@ -13,18 +13,20 @@ a {
   display: none;
 }
 
-#header {
-  padding: 4px;
-  border-bottom: 1px solid #000;
-  background: #eee;
-}
 
 .v-icon.notranslate.v-icon--link.mdi.mdi-refresh.theme--light:after {
-  height: 24px;   
+  height: 24px;
   background-color: #1976d2;
 }
+.v-slide-group.v-item-group > .v-slide-group__next,
+.v-slide-group.v-item-group > .v-slide-group__prev {
+  min-width: unset;
+}
 
+.v-input__control>.v-text-field__details {
+  display: none;
+}
 .v-icon.notranslate.v-icon--link.mdi.mdi-refresh.theme--light:active {
-  transform:rotate(360deg);
+  transform: rotate(360deg);
   transition: linear 150ms;
 }

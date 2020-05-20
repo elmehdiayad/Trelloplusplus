@@ -13,7 +13,7 @@
 <body>
   <div id="trelloplusplus">
     <v-app>
-      <v-system-bar window>
+      <v-system-bar window >
         <span class="body-1">Trello++</span>
         <v-spacer></v-spacer>
         <a href="/options/options.html" target="_blank" class="d-flex flex-row">
@@ -26,9 +26,13 @@
           <v-select v-model="selectedBoard" @change="filterByBoardId(selectedBoard)" :items="boards"
             label="Choose a board" item-text="name" item-value="id">
           </v-select>
-
-          <v-expansion-panels>
-            <v-expansion-panel v-for="card in filtredCards" :key="card.id">
+          <v-chip-group v-model="selectedList" mandatory show-arrows active-class="primary--text" next-icon="mdi-drag-vertical" prev-icon="mdi-drag-vertical" @change="filterByListId(selectedList)">
+            <v-chip v-for="list in lists" :key="list.id" :value="list.id" label small>
+              {{ list.name }}
+            </v-chip>
+          </v-chip-group>
+          <v-expansion-panels class="mt-2">
+            <v-expansion-panel v-for="card in filtredCards" :key="card.id" >
               <v-expansion-panel-header hide-actions>
                 {{card.name}}
               </v-expansion-panel-header>

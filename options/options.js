@@ -20,7 +20,7 @@ function init() {
             }).then((member) => {
               localStorage.setItem("username", member.fullName);
               new Promise((resolve) => {
-                Trello.get("members/me/boards", function (boards) {
+                Trello.get("members/me/boards?lists=all", function (boards) {
                   resolve(boards);
                 });
               }).then((boards) => {

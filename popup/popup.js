@@ -26,15 +26,27 @@ var boardStorage = {
   },
 };
 
+var listStorage = {
+  fetch: function () {
+    var lists = JSON.parse(localStorage.getItem("all_lists") || "[]");
+    return lists;
+  },
+  save: function (lists) {
+    localStorage.setItem("all_lists", JSON.stringify(lists));
+  },
+};
+
 new Vue({
   el: "#trelloplusplus",
   vuetify: new Vuetify(),
   data: {
     username: localStorage.getItem("username"),
     selectedBoard: localStorage.getItem("selected_board") || "",
+    selectedList: localStorage.getItem("selected_list") || "",
     cards: cardStorage.fetchAll(),
     filtredCards: cardStorage.fetch(),
     boards: boardStorage.fetch(),
+    lists: listStorage.fetch(),
   },
   watch: {
     filtredCards: {
@@ -60,12 +72,22 @@ new Vue({
         localStorage.setItem("selected_board", selectedBoard);
       },
     },
+    selectedList: {
+      handler: function (selectedList) {
+        localStorage.setItem("selected_list", selectedList);
+      },
+    },
+    lists: {
+      handler: function (lists) {
+        listStorage.save(lists);
+      },
+    },
   },
 
   methods: {
     fetch: function () {
       new Promise((resolve) => {
-        Trello.get("members/me/boards", function (boards) {
+        Trello.get("members/me/boards?lists=all", function (boards) {
           resolve(boards);
         });
       }).then((boards) => {
@@ -76,7 +98,7 @@ new Vue({
           });
         }).then((cards) => {
           this.filtredCards = cards.filter(
-            (card) => card.idBoard === this.selectedBoard
+            (card) => card.idList === this.selectedList
           );
           this.cards = cards;
         });
@@ -84,7 +106,16 @@ new Vue({
     },
     filterByBoardId: function (boardId) {
       this.filtredCards = this.cards.filter((card) => card.idBoard === boardId);
+      let cardListIds = this.filtredCards.map((card) => card.idList);
+      this.lists = this.boards
+        .filter((board) => board.id === boardId)[0]
+        .lists.filter((list) => list.idBoard == boardId)
+        .filter((list) => cardListIds.includes(list.id) /* && !list.name.toLowerCase().includes("done")*/);
       this.selectedBoard = boardId;
+    },
+    filterByListId: function (listId) {
+      this.filtredCards = this.cards.filter((card) => card.idList === listId);
+      this.selectedList = listId;
     },
     move: function (card) {
       console.log(card.name);
