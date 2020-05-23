@@ -27,12 +27,26 @@ var boardStorage = {
 };
 
 var listStorage = {
-  fetch: function () {
+  fetchAll: function () {
     var lists = JSON.parse(localStorage.getItem("all_lists") || "[]");
     return lists;
   },
-  save: function (lists) {
+  fetchFiltred: function () {
+    var lists = JSON.parse(localStorage.getItem("filtred_lists") || "[]");
+    return lists;
+  },
+  fetchDestination: function () {
+    var lists = JSON.parse(localStorage.getItem("destination_lists") || "[]");
+    return lists;
+  },
+  saveAll: function (lists) {
     localStorage.setItem("all_lists", JSON.stringify(lists));
+  },
+  saveFiltred: function (lists) {
+    localStorage.setItem("filtred_lists", JSON.stringify(lists));
+  },
+  saveDestination: function (lists) {
+    localStorage.setItem("destination_lists", JSON.stringify(lists));
   },
 };
 
@@ -46,7 +60,12 @@ new Vue({
     cards: cardStorage.fetchAll(),
     filtredCards: cardStorage.fetch(),
     boards: boardStorage.fetch(),
-    lists: listStorage.fetch(),
+    lists: listStorage.fetchAll(),
+    filtredLists: listStorage.fetchFiltred(),
+    destinationLists: listStorage.fetchDestination(),
+    destinationList: "",
+    fetching: false,
+    undoing: false,
   },
   watch: {
     filtredCards: {
@@ -79,47 +98,87 @@ new Vue({
     },
     lists: {
       handler: function (lists) {
-        listStorage.save(lists);
+        listStorage.saveAll(lists);
       },
+      deep: true,
+    },
+    filtredLists: {
+      handler: function (lists) {
+        listStorage.saveFiltred(lists);
+      },
+      deep: true,
+    },
+    destinationLists: {
+      handler: function (lists) {
+        listStorage.saveDestination(lists);
+      },
+      deep: true,
     },
   },
 
   methods: {
     fetch: function () {
+      this.fetching = true;
       new Promise((resolve) => {
         Trello.get("members/me/boards?lists=all", function (boards) {
           resolve(boards);
         });
       }).then((boards) => {
         this.boards = boards;
+        let listIds = this.filtredLists.map((list) => list.id);
+        this.filtredLists = this.filtredLists.concat(
+          this.lists.filter(
+            (list) =>
+              list.id === this.destinationList &&
+              listIds.indexOf(this.destinationList) === -1
+          )
+        );
+        this.destinationList = "";
         new Promise((resolve) => {
           Trello.get("members/me/cards", function (cards) {
             resolve(cards);
           });
         }).then((cards) => {
+          console.log(cards);
           this.filtredCards = cards.filter(
             (card) => card.idList === this.selectedList
           );
           this.cards = cards;
+          this.fetching = false;
         });
       });
     },
     filterByBoardId: function (boardId) {
+      this.selectedBoard = boardId;
       this.filtredCards = this.cards.filter((card) => card.idBoard === boardId);
       let cardListIds = this.filtredCards.map((card) => card.idList);
-      this.lists = this.boards
-        .filter((board) => board.id === boardId)[0]
-        .lists.filter((list) => list.idBoard == boardId)
-        .filter((list) => cardListIds.includes(list.id) /* && !list.name.toLowerCase().includes("done")*/);
-      this.selectedBoard = boardId;
+      this.lists = this.boards.filter((board) => board.id === boardId)[0].lists;
+      this.filtredLists = this.lists
+        .filter((list) => list.idBoard == boardId)
+        .filter(
+          (list) =>
+            cardListIds.includes(
+              list.id
+            ) /* && !list.name.toLowerCase().includes("done")*/
+        );
+      this.selectedList = "";
     },
     filterByListId: function (listId) {
-      this.filtredCards = this.cards.filter((card) => card.idList === listId);
       this.selectedList = listId;
+      this.filtredCards = this.cards.filter((card) => card.idList === listId);
+      this.destinationLists = this.lists.filter((list) => list.id !== listId);
     },
-    move: function (card) {
-      console.log(card.name);
+    move: function (cardId, listId) {
+      new Promise((resolve) => {
+        Trello.put("cards/" + cardId + "?idList=" + listId);
+        resolve(true);
+      }).then((done) => {
+        this.fetch();
+        return done
+      }).then((done) => this.undoing = done);
     },
-    copie: function (card) {},
+    undo: function() {
+      this.undoing = false
+    }
   },
 });

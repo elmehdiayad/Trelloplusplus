@@ -56,8 +56,7 @@ function init() {
       expiration: "never",
       interactive: true,
       scope: { read: true, write: true },
-      success: function () {
-      },
+      success: function () {},
       error: function () {
         alert("Failed to authorize with Trello.");
       },
@@ -79,3 +78,9 @@ function init() {
   }
 }
 $(document).ready(init);
+
+new Vue({
+  el: "#options-page",
+  vuetify: new Vuetify(),
+  data: {},
+});

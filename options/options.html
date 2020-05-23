@@ -5,7 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trello++ Options</title>
-	<link rel="stylesheet" href="options.css">
+  <link rel="stylesheet" href="options.css">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -17,10 +19,34 @@
     <p>You are already authorized</p>
     <a href="#" id="deauthorize-button">Log out</a><br />
   </div>
+
+
+
+  <div id="options-page">
+    <v-app>
+      <v-content>
+        <v-container>
+          <v-card class="mx-auto" max-width="600">
+            <v-card-text>
+              <p class="display-1 text--primary">
+                You are not authorized yet
+              </p>
+            </v-card-text>
+            <v-btn color="primary">Authorize</v-btn>
+          </v-card>
+        </v-container>
+      </v-content>
+    </v-app>
+  </div>
+
+
+
   <script src="../lib/jquery.js"></script>
-  <script src="options.js"></script>
-  <script src="https://api.trello.com/1/client.js?key=23ae2ad25ad0c4a9e5459765ca6f3333"></script>
   <script src="../lib/hashSearch.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script src="https://api.trello.com/1/client.js?key=23ae2ad25ad0c4a9e5459765ca6f3333"></script>
+  <script src="options.js"></script>
 
 </body>
 

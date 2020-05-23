@@ -13,7 +13,6 @@ a {
   display: none;
 }
 
-
 .v-icon.notranslate.v-icon--link.mdi.mdi-refresh.theme--light:after {
   height: 24px;
   background-color: #1976d2;
@@ -21,9 +20,10 @@ a {
 .v-slide-group.v-item-group > .v-slide-group__next,
 .v-slide-group.v-item-group > .v-slide-group__prev {
   min-width: unset;
+  padding-right: -5px;
 }
 
-.v-input__control>.v-text-field__details {
+.v-input__control > .v-text-field__details {
   display: none;
 }
 .v-icon.notranslate.v-icon--link.mdi.mdi-refresh.theme--light:active {
