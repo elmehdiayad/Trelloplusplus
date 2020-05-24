@@ -65,6 +65,7 @@ new Vue({
     filtredLists: listStorage.fetchFiltred(),
     destinationLists: listStorage.fetchDestination(),
     destinationList: "",
+    movedCardId: "",
     fetching: false,
     undoing: false,
   },
@@ -170,16 +171,19 @@ new Vue({
       this.destinationLists = this.lists.filter((list) => list.id !== listId);
     },
     move: function (cardId, listId) {
+      this.movedCardId = cardId;
       new Promise((resolve) => {
         Trello.put("cards/" + cardId + "?idList=" + listId);
         resolve(true);
       }).then((done) => {
         this.fetch();
-        return done
-      }).then((done) => this.undoing = done);
+        this.undoing = done;
+      });
     },
-    undo: function() {
-      this.undoing = false
-    }
+    undo: function () {
+      this.undoing = false;
+      Trello.put("cards/" + this.movedCardId + "?idList=" + this.selectedList);
+      this.fetch();
+    },
   },
 });

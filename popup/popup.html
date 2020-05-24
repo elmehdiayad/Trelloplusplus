@@ -47,19 +47,19 @@
                   </v-chip>
                 </v-chip-group> -->
                 <v-col cols="6" class="px-0">
-                  <v-select v-model="destinationList" @change="move(card.id, destinationList)" :items="destinationLists"
+                  <v-select dense flat v-model="destinationList" @change="move(card.id, destinationList)" :items="destinationLists"
                     label="Move to" item-text="name" item-value="id">
                   </v-select>
                 </v-col>
               </v-expansion-panel-content>
               <v-card-actions class="d-flex">
-                <v-btn small text >Code Reveiw</v-btn>
-                <v-btn small text>Blocked</v-btn>
+                <!-- <v-btn small text >Code Reveiw</v-btn>
+                <v-btn small text>Blocked</v-btn> -->
                 <div class="ml-auto mr-2">
                   <a :href="card.shortUrl" target="_blank">
                     <v-icon small>mdi-open-in-new</v-icon>
                   </a>
-                  <v-icon small @click="copie(card)">mdi-content-copy</v-icon>
+                  <!-- <v-icon small @click="">mdi-content-copy</v-icon> -->
                 </div>
               </v-card-actions>
 
