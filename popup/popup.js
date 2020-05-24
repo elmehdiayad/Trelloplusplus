@@ -55,6 +55,7 @@ new Vue({
   vuetify: new Vuetify(),
   data: {
     username: localStorage.getItem("username"),
+    logged: localStorage.trello_token,
     selectedBoard: localStorage.getItem("selected_board") || "",
     selectedList: localStorage.getItem("selected_list") || "",
     cards: cardStorage.fetchAll(),

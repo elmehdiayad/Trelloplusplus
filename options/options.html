@@ -11,29 +11,58 @@
 </head>
 
 <body>
-  <div id="authorize">
-    <p>You are not authorized yet</p>
-    <a href="#" id="authorize-button">Authorize</a><br />
-  </div>
-  <div id="deauthorize" style="display: none">
-    <p>You are already authorized</p>
-    <a href="#" id="deauthorize-button">Log out</a><br />
-  </div>
-
-
-
-  <div id="options-page">
+  <div id="trelloplusplus-options">
     <v-app>
       <v-content>
         <v-container>
-          <v-card class="mx-auto" max-width="600">
-            <v-card-text>
-              <p class="display-1 text--primary">
-                You are not authorized yet
-              </p>
-            </v-card-text>
-            <v-btn color="primary">Authorize</v-btn>
+          <v-card class="pt-4 mx-auto text-center" width="500px">
+            <v-img src="../images/logo.png" height="200px" contain></v-img>
+            <div :class="`d-${logged ? 'none' : 'block'}`">
+              <v-card-text class="mt-4">
+                <p class="display-1 grey--text text--darken-2">
+                  You are not authorized yet
+                </p>
+              </v-card-text>
+              <v-card-actions class="d-flex justify-center mb-8">
+                <v-btn tile @click="authorize">
+                  Authorize
+                </v-btn>
+              </v-card-actions>
+            </div>
+            <div :class="`d-${logged ? 'block' : 'none'}`">
+              <v-card-text class="mt-4">
+                <p class="display-1 grey--text text--darken-2">
+                  You are already authorized
+                </p>
+              </v-card-text>
+              <v-card-actions class="d-flex justify-center mb-8">
+                <v-btn tile @click="deauthorize">
+                  Log out
+                </v-btn>
+              </v-card-actions>
+            </div>
+            <v-footer dark padless>
+              <v-card flat tile class="blue darken-3 white--text text-center">
+                <v-card-text>
+                  <v-btn v-for="icon in icons" :key="icon" class="mx-4 white--text "
+                    href="https://linkedin.com/in/ayadelmehdi" target="_blank" icon>
+                    <v-icon size="24px">{{ icon }}</v-icon>
+                  </v-btn>
+                </v-card-text>
+
+                <v-card-text class="white--text pt-0">
+                  We’re here to help and answer any question you might have. We look forward to hearing from you 🙂
+                </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-text class="white--text">
+                  {{ new Date().getFullYear() }} — <strong>Trello++</strong>
+                </v-card-text>
+              </v-card>
+            </v-footer>
           </v-card>
+
         </v-container>
       </v-content>
     </v-app>

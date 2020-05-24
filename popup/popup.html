@@ -17,9 +17,9 @@
       top: 0px;
       z-index: 4;">
         <span class="body-1">Trello++</span>
-        <v-progress-circular :indeterminate="fetching" size="19" @click="fetch" style="right: 5vw;"></v-progress-circular>
+        <v-progress-circular :indeterminate="fetching" size="19" @click="fetch" :class="`d-${!logged && 'none'}`" style="right: 5vw;"></v-progress-circular>
         <a href="/options/options.html" target="_blank">
-          <v-icon size='24' color="#757575" class="mr-0">mdi-account-outline</v-icon>
+          <v-icon size='24' color="#BDBDBD" class="mr-0">mdi-account-outline</v-icon>
         </a>
       </v-system-bar>
       <v-content>
