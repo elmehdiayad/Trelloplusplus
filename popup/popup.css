@@ -1,7 +1,7 @@
 body {
   font-family: arial;
   font-size: 12px;
-  width: 370px;
+  width: 350px;
   height: 400px;
 }
 
@@ -29,4 +29,8 @@ a {
 .v-icon.notranslate.v-icon--link.mdi.mdi-refresh.theme--light:active {
   transform: rotate(360deg);
   transition: linear 150ms;
+}
+
+.v-responsive.v-image{
+  flex: unset
 }

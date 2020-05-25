@@ -65,7 +65,7 @@ new Vue({
     filtredLists: listStorage.fetchFiltred(),
     destinationLists: listStorage.fetchDestination(),
     destinationList: "",
-    movedCardId: "",
+    movedCard: [],
     fetching: false,
     undoing: false,
   },
@@ -141,7 +141,6 @@ new Vue({
             resolve(cards);
           });
         }).then((cards) => {
-          console.log(cards);
           this.filtredCards = cards.filter(
             (card) => card.idList === this.selectedList
           );
@@ -170,20 +169,34 @@ new Vue({
       this.filtredCards = this.cards.filter((card) => card.idList === listId);
       this.destinationLists = this.lists.filter((list) => list.id !== listId);
     },
-    move: function (cardId, listId) {
-      this.movedCardId = cardId;
+    move: function (movedCard, index, listId) {
+      this.movedCard[0] = movedCard;
+      this.movedCard[1] = index;
       new Promise((resolve) => {
-        Trello.put("cards/" + cardId + "?idList=" + listId);
+        Trello.put("cards/" + movedCard.id + "?idList=" + listId);
         resolve(true);
       }).then((done) => {
+        this.filtredCards = this.filtredCards.filter(
+          (card) => card.id !== movedCard.id
+        );
         this.fetch();
         this.undoing = done;
       });
     },
     undo: function () {
       this.undoing = false;
-      Trello.put("cards/" + this.movedCardId + "?idList=" + this.selectedList);
+      this.filtredCards.splice(this.movedCard[1], 0, this.movedCard[0]);
+      Trello.put("cards/" + this.movedCard[0].id + "?idList=" + this.selectedList);
       this.fetch();
+    },
+    test: function (cardId) {
+      new Promise((resolve) => {
+        Trello.get("cards/" + cardId + "/checklists", function (cards) {
+          resolve(cards);
+        });
+      }).then((cards) => {
+        console.log(cards);
+      });
     },
   },
 });

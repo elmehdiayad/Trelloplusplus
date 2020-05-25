@@ -16,10 +16,11 @@
       <v-system-bar class="d-flex justify-space-between" style="position: sticky;
       top: 0px;
       z-index: 4;">
-        <span class="body-1">Trello++</span>
-        <v-progress-circular :indeterminate="fetching" size="19" @click="fetch" :class="`d-${!logged && 'none'}`" style="right: 5vw;"></v-progress-circular>
+        <v-img src="../images/logo16.png" height="18px" contain></v-img>
+        <v-progress-circular color="#039BE5" :indeterminate="fetching" size="19" @click="fetch"
+          :class="`d-${!logged && 'none'}`"></v-progress-circular>
         <a href="/options/options.html" target="_blank">
-          <v-icon size='24' color="#BDBDBD" class="mr-0">mdi-account-outline</v-icon>
+          <v-icon size='20' color="#BDBDBD" class="mr-0">mdi-account-circle-outline</v-icon>
         </a>
       </v-system-bar>
       <v-content>
@@ -34,9 +35,10 @@
             </v-chip>
           </v-chip-group>
           <v-expansion-panels class="mt-2">
-            <v-expansion-panel v-for="card in filtredCards" :key="card.id">
-              <v-expansion-panel-header hide-actions>
-                #{{card.idShort}} - {{card.name}}
+            <v-expansion-panel v-for="(card, index) in filtredCards" :key="card.id">
+              <v-expansion-panel-header hide-actions class="d-block">
+                <span style="background-color:#b3d4fc; border-radius: 5px; padding: 2px;">#{{card.idShort}}</span> -
+                {{card.name}}
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 {{card.desc}}
@@ -47,14 +49,14 @@
                   </v-chip>
                 </v-chip-group> -->
                 <v-col cols="6" class="px-0">
-                  <v-select dense flat v-model="destinationList" @change="move(card.id, destinationList)" :items="destinationLists"
-                    label="Move to" item-text="name" item-value="id">
+                  <v-select dense flat v-model="destinationList" @change="move(card, index, destinationList)"
+                    :items="destinationLists" label="Move to" item-text="name" item-value="id">
                   </v-select>
                 </v-col>
               </v-expansion-panel-content>
               <v-card-actions class="d-flex">
-                <!-- <v-btn small text >Code Reveiw</v-btn>
-                <v-btn small text>Blocked</v-btn> -->
+                <v-btn small text @click="test(card.id)">Code Reveiw</v-btn>
+                <!--<v-btn small text>Blocked</v-btn> -->
                 <div class="ml-auto mr-2">
                   <a :href="card.shortUrl" target="_blank">
                     <v-icon small>mdi-open-in-new</v-icon>
@@ -68,17 +70,14 @@
           <v-bottom-sheet v-model="undoing" inset>
             </template>
             <v-sheet class="text-center" height="75px">
-              <v-icon
-                class="mt-6"
-                @click="undo"
-              >mdi-undo-variant</v-icon>
+              <v-icon class="mt-6" @click="undo" color="#039BE5">mdi-undo-variant</v-icon>
             </v-sheet>
           </v-bottom-sheet>
         </v-container>
       </v-content>
     </v-app>
   </div>
-  <script src="../lib/jquery.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
   <script src="https://api.trello.com/1/client.js?key=23ae2ad25ad0c4a9e5459765ca6f3333"></script>
