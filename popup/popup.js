@@ -68,6 +68,7 @@ new Vue({
     movedCard: [],
     fetching: false,
     undoing: false,
+    POINTS_SCALE: ["X", 0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100],
   },
   watch: {
     filtredCards: {
@@ -135,7 +136,6 @@ new Vue({
               listIds.indexOf(this.destinationList) === -1
           )
         );
-        this.destinationList = "";
         new Promise((resolve) => {
           Trello.get("members/me/cards", function (cards) {
             resolve(cards);
@@ -170,6 +170,7 @@ new Vue({
       this.destinationLists = this.lists.filter((list) => list.id !== listId);
     },
     move: function (movedCard, index, listId) {
+      this.destinationList = listId;
       this.movedCard[0] = movedCard;
       this.movedCard[1] = index;
       new Promise((resolve) => {
@@ -186,7 +187,9 @@ new Vue({
     undo: function () {
       this.undoing = false;
       this.filtredCards.splice(this.movedCard[1], 0, this.movedCard[0]);
-      Trello.put("cards/" + this.movedCard[0].id + "?idList=" + this.selectedList);
+      Trello.put(
+        "cards/" + this.movedCard[0].id + "?idList=" + this.selectedList
+      );
       this.fetch();
     },
     test: function (cardId) {
@@ -194,8 +197,40 @@ new Vue({
         Trello.get("cards/" + cardId + "/checklists", function (cards) {
           resolve(cards);
         });
-      }).then((cards) => {
-        console.log(cards);
+      }).then((cards) => {});
+    },
+    estimate: function (point, cardId) {
+      this.filtredCards.map((card) => {
+        if (card.id === cardId) {
+          if (!card.name.match(/\((\?|\d+\.?,?\d*)\)/) && point !== "X")
+            card.name = "(" + point + ") " + card.name;
+          else if (point === "X")
+            card.name = card.name.replace(/\((\?|\d+\.?,?\d*)\)/, "");
+          else
+            card.name = card.name.replace(
+              /\((\?|\d+\.?,?\d*)\)/,
+              "(" + point + ") "
+            );
+          Trello.put("cards/" + card.id + "?name=" + card.name);
+          this.fetch();
+        }
+      });
+    },
+    postEstimate: function (point, cardId) {
+      this.filtredCards.map((card) => {
+        if (card.id === cardId) {
+          if (!card.name.match(/\[(\?|\d+\.?,?\d*)\]/) && point !== "X")
+            card.name = "[" + point + "] " + card.name;
+          else if (point === "X")
+            card.name = card.name.replace(/\[(\?|\d+\.?,?\d*)\]/, "");
+          else
+            card.name = card.name.replace(
+              /\[(\?|\d+\.?,?\d*)\]/,
+              "[" + point + "] "
+            );
+          Trello.put("cards/" + card.id + "?name=" + card.name);
+          this.fetch();
+        }
       });
     },
   },

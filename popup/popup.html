@@ -37,26 +37,52 @@
           <v-expansion-panels class="mt-2">
             <v-expansion-panel v-for="(card, index) in filtredCards" :key="card.id">
               <v-expansion-panel-header hide-actions class="d-block">
-                <span style="background-color:#b3d4fc; border-radius: 5px; padding: 2px;">#{{card.idShort}}</span> -
-                {{card.name}}
+                <span style="background-color:#b3d4fc; border-radius: 5px; padding: 1px;">#{{card.idShort}}</span> -
+                {{card.name.replace(/\((\?|\d+\.?,?\d*)\)/, '').replace(/\[(\?|\d+\.?,?\d*)\]/, '')}}
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 {{card.desc}}
-                <!-- <v-chip-group  mandatory show-arrows active-class="primary--text"
-                  next-icon="mdi-drag-vertical" prev-icon="mdi-drag-vertical" @change="">
-                  <v-chip v-for="list in lists" :key="list.id" :value="list.id" label small>
-                    {{ list.name }}
-                  </v-chip>
-                </v-chip-group> -->
-                <v-col cols="6" class="px-0">
-                  <v-select dense flat v-model="destinationList" @change="move(card, index, destinationList)"
-                    :items="destinationLists" label="Move to" item-text="name" item-value="id">
-                  </v-select>
-                </v-col>
               </v-expansion-panel-content>
-              <v-card-actions class="d-flex">
-                <v-btn small text @click="test(card.id)">Code Reveiw</v-btn>
-                <!--<v-btn small text>Blocked</v-btn> -->
+              <v-card-actions class="pl-6">
+                <v-menu bottom origin="center center" transition="scale-transition">
+                  <template v-slot:activator="{ on }">
+                    <v-btn small v-on="on" class="body-2 mr-2">
+                      Move to
+                    </v-btn>
+                  </template>
+                  <v-list dense tile max-height="200px" class="py-0">
+                    <v-list-item dense :inactive=false v-for="(list, index) in destinationLists" :key="list.id"
+                      @click="move(card, index, list.id)" style="background-color: white">
+                      {{ list.name }}
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+                <v-menu bottom origin="center center" transition="scale-transition">
+                  <template v-slot:activator="{ on }">
+                    <v-btn min-width="unset" small v-on="on" class="blue lighten-2 white--text font-weight-bold body-2 mr-2">
+                      {{ card.name.match(/\((\?|\d+\.?,?\d*)\)/) ? card.name.match(/\((\?|\d+\.?,?\d*)\)/)[0].replace(/[{()}]/g, '') : 'Es'}}
+                    </v-btn>
+                  </template>
+                  <v-list dense tile max-height="200px" class="py-0">
+                    <v-list-item dense :inactive=false v-for="(point, index) in POINTS_SCALE" :key="point"
+                      @click="estimate(point, card.id)" style="background-color: white">
+                      {{point}}
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+                <v-menu bottom origin="center center" transition="scale-transition">
+                  <template v-slot:activator="{ on }">
+                    <v-btn  min-width="unset" small class="blue lighten-3 white--text font-weight-bold body-2" v-on="on">
+                      {{ card.name.match(/\[(\?|\d+\.?,?\d*)\]/) ? card.name.match(/\[(\?|\d+\.?,?\d*)\]/)[0].replace(/[\[\]']+/g, '') : 'PEs'}}
+                    </v-btn>
+                  </template>
+                  <v-list dense tile max-height="200px" class="py-0">
+                    <v-list-item dense :inactive=false v-for="(point, index) in POINTS_SCALE" :key="point"
+                      @click="postEstimate(point, card.id)" style="background-color: white">
+                      {{point}}
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
                 <div class="ml-auto mr-2">
                   <a :href="card.shortUrl" target="_blank">
                     <v-icon small>mdi-open-in-new</v-icon>
@@ -67,12 +93,9 @@
 
             </v-expansion-panel>
           </v-expansion-panels>
-          <v-bottom-sheet v-model="undoing" inset>
-            </template>
-            <v-sheet class="text-center" height="75px">
-              <v-icon class="mt-6" @click="undo" color="#039BE5">mdi-undo-variant</v-icon>
-            </v-sheet>
-          </v-bottom-sheet>
+          <v-snackbar v-model="undoing" :timeout=3000 right top>
+            <v-icon class="mt-6" @click="undo" color="#039BE5">mdi-undo-variant</v-icon>
+          </v-snackbar>
         </v-container>
       </v-content>
     </v-app>

@@ -1,6 +1,6 @@
 {
   "name": "Trello++",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "manifest_version": 2,
   "description": "Trello++ helps you use trello as a developer",
   "icons": { "16": "images/logo16.png", "48": "images/logo48.png", "128": "images/logo128.png" },
@@ -11,11 +11,10 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["lib/jquery.js"],
+      "js": ["lib/hashSearch.js"],
       "run_at": "document_idle"
     }
   ],
-  "permissions": [],
   "browser_action": {
     "default_popup": "popup/popup.html"
   },

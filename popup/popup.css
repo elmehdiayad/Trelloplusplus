@@ -34,3 +34,9 @@ a {
 .v-responsive.v-image{
   flex: unset
 }
+
+.v-snack {
+  width: fit-content;
+  height: 0px;
+}
+
