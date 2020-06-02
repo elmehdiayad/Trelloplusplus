@@ -69,6 +69,7 @@ new Vue({
     fetching: false,
     undoing: false,
     POINTS_SCALE: ["X", 0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100],
+    showAll: JSON.parse(localStorage.getItem("show_all")),
   },
   watch: {
     filtredCards: {
@@ -117,6 +118,11 @@ new Vue({
       },
       deep: true,
     },
+    showAll: {
+      handler: function (showAll) {
+        this.mShowAll(showAll);
+      },
+    },
   },
 
   methods: {
@@ -128,14 +134,6 @@ new Vue({
         });
       }).then((boards) => {
         this.boards = boards;
-        let listIds = this.filtredLists.map((list) => list.id);
-        this.filtredLists = this.filtredLists.concat(
-          this.lists.filter(
-            (list) =>
-              list.id === this.destinationList &&
-              listIds.indexOf(this.destinationList) === -1
-          )
-        );
         new Promise((resolve) => {
           Trello.get("members/me/cards", function (cards) {
             resolve(cards);
@@ -150,29 +148,32 @@ new Vue({
       });
     },
     filterByBoardId: function (boardId) {
+      this.showAll = false;
       this.selectedBoard = boardId;
       this.filtredCards = this.cards.filter((card) => card.idBoard === boardId);
       let cardListIds = this.filtredCards.map((card) => card.idList);
       this.lists = this.boards.filter((board) => board.id === boardId)[0].lists;
       this.filtredLists = this.lists
         .filter((list) => list.idBoard == boardId)
-        .filter(
-          (list) =>
-            cardListIds.includes(
-              list.id
-            ) /* && !list.name.toLowerCase().includes("done")*/
-        );
+        .filter((list) => cardListIds.includes(list.id));
       this.selectedList = "";
     },
     filterByListId: function (listId) {
+      this.mShowAll(this.showAll);
       this.selectedList = listId;
       this.filtredCards = this.cards.filter((card) => card.idList === listId);
       this.destinationLists = this.lists.filter((list) => list.id !== listId);
     },
     move: function (movedCard, index, listId) {
-      this.destinationList = listId;
       this.movedCard[0] = movedCard;
       this.movedCard[1] = index;
+      this.destinationList = listId;
+      let listIds = this.filtredLists.map((list) => list.id);
+      this.filtredLists = this.filtredLists.concat(
+        this.lists.filter(
+          (list) => list.id === listId && listIds.indexOf(listId) === -1
+        )
+      );
       new Promise((resolve) => {
         Trello.put("cards/" + movedCard.id + "?idList=" + listId);
         resolve(true);
@@ -192,13 +193,15 @@ new Vue({
       );
       this.fetch();
     },
-    test: function (cardId) {
-      new Promise((resolve) => {
-        Trello.get("cards/" + cardId + "/checklists", function (cards) {
-          resolve(cards);
-        });
-      }).then((cards) => {});
+    removeList: function (listId) {
+      this.filtredLists = this.filtredLists.filter(
+        (list) => list.id !== listId
+      );
+      this.selectedList = this.filtredLists[0].id;
     },
+    // test: function (card) {
+    //   console.log(card);
+    // },
     estimate: function (point, cardId) {
       this.filtredCards.map((card) => {
         if (card.id === cardId) {
@@ -212,7 +215,6 @@ new Vue({
               "(" + point + ") "
             );
           Trello.put("cards/" + card.id + "?name=" + card.name);
-          this.fetch();
         }
       });
     },
@@ -229,9 +231,29 @@ new Vue({
               "[" + point + "] "
             );
           Trello.put("cards/" + card.id + "?name=" + card.name);
-          this.fetch();
         }
       });
+    },
+    mShowAll: function (showAll) {
+      localStorage.setItem("show_all", showAll);
+      if (showAll) {
+        this.filtredLists = this.lists;
+        new Promise((resolve) => {
+          Trello.get("boards/" + this.selectedBoard + "/cards", function (
+            cards
+          ) {
+            resolve(cards);
+          });
+        }).then((cards) => {
+          this.filtredCards = cards.filter(
+            (card) => card.idList === this.selectedList
+          );
+        });
+      } else {
+        this.filtredCards = this.cards.filter(
+          (card) => card.idList === this.selectedList
+        );
+      }
     },
   },
 });

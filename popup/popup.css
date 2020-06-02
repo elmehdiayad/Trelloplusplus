@@ -12,7 +12,6 @@ a {
 ::-webkit-scrollbar {
   display: none;
 }
-
 .v-icon.notranslate.v-icon--link.mdi.mdi-refresh.theme--light:after {
   height: 24px;
   background-color: #1976d2;

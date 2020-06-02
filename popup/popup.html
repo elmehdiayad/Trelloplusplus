@@ -19,9 +19,24 @@
         <v-img src="../images/logo16.png" height="18px" contain></v-img>
         <v-progress-circular color="#039BE5" :indeterminate="fetching" size="19" @click="fetch"
           :class="`d-${!logged && 'none'}`"></v-progress-circular>
-        <a href="/options/options.html" target="_blank">
-          <v-icon size='20' color="#BDBDBD" class="mr-0">mdi-account-circle-outline</v-icon>
-        </a>
+        <v-menu :close-on-content-click='false'>
+          <template v-slot:activator="{ on }">
+            <v-btn dark v-on="on" icon width="fit-content">
+              <v-icon size='20' color="#BDBDBD" class="mr-0">mdi-cogs</v-icon>
+          </template>
+          <v-list dense tile max-height="200px" class="py-0">
+            <v-list-item>
+              <v-switch v-model="showAll" :loading='false' class="my-0" label="Show All "
+                style="max-height: 30px;"></v-switch>
+            </v-list-item>
+            <v-list-item>
+              <a href="/options/options.html" target="_blank" class="body-1"  color="#BDBDBD">
+                Options
+              </a>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+
       </v-system-bar>
       <v-content>
         <v-container>
@@ -30,7 +45,8 @@
           </v-select>
           <v-chip-group v-model="selectedList" mandatory show-arrows active-class="primary--text"
             next-icon="mdi-drag-vertical" prev-icon="mdi-drag-vertical" @change="filterByListId(selectedList)">
-            <v-chip v-for="list in filtredLists" :key="list.id" :value="list.id" label small>
+            <v-chip v-for="list in filtredLists" :key="list.id" :value="list.id" label close
+              @click:close="removeList(list.id)">
               {{ list.name }}
             </v-chip>
           </v-chip-group>
@@ -47,7 +63,7 @@
                 <v-menu bottom origin="center center" transition="scale-transition">
                   <template v-slot:activator="{ on }">
                     <v-btn small v-on="on" class="body-2 mr-2">
-                      Move to
+                      Move
                     </v-btn>
                   </template>
                   <v-list dense tile max-height="200px" class="py-0">
@@ -59,7 +75,8 @@
                 </v-menu>
                 <v-menu bottom origin="center center" transition="scale-transition">
                   <template v-slot:activator="{ on }">
-                    <v-btn min-width="unset" small v-on="on" class="blue lighten-2 white--text font-weight-bold body-2 mr-2">
+                    <v-btn min-width="unset" small v-on="on"
+                      class="blue lighten-2 white--text font-weight-bold body-2 mr-2">
                       {{ card.name.match(/\((\?|\d+\.?,?\d*)\)/) ? card.name.match(/\((\?|\d+\.?,?\d*)\)/)[0].replace(/[{()}]/g, '') : 'Es'}}
                     </v-btn>
                   </template>
@@ -72,7 +89,7 @@
                 </v-menu>
                 <v-menu bottom origin="center center" transition="scale-transition">
                   <template v-slot:activator="{ on }">
-                    <v-btn  min-width="unset" small class="blue lighten-3 white--text font-weight-bold body-2" v-on="on">
+                    <v-btn min-width="unset" small class="blue lighten-3 white--text font-weight-bold body-2" v-on="on">
                       {{ card.name.match(/\[(\?|\d+\.?,?\d*)\]/) ? card.name.match(/\[(\?|\d+\.?,?\d*)\]/)[0].replace(/[\[\]']+/g, '') : 'PEs'}}
                     </v-btn>
                   </template>
@@ -87,7 +104,7 @@
                   <a :href="card.shortUrl" target="_blank">
                     <v-icon small>mdi-open-in-new</v-icon>
                   </a>
-                  <!-- <v-icon small @click="">mdi-content-copy</v-icon> -->
+                  <!-- <v-icon small @click="test(card)">mdi-content-copy</v-icon> -->
                 </div>
               </v-card-actions>
 
