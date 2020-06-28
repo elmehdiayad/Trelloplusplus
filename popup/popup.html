@@ -25,10 +25,10 @@
               <v-icon size='20' color="#BDBDBD" class="mr-0">mdi-cogs</v-icon>
           </template>
           <v-list dense tile max-height="200px" class="py-0">
-            <v-list-item>
-              <v-switch v-model="showAll" :loading='false' class="my-0" label="Show All "
+            <!-- <v-list-item>
+              <v-switch disabled v-model="showAll" :loading='false' class="my-0" label="Show All "
                 style="max-height: 30px;"></v-switch>
-            </v-list-item>
+            </v-list-item> -->
             <v-list-item>
               <a href="/options/options.html" target="_blank" class="body-1"  color="#BDBDBD">
                 Options
@@ -38,7 +38,7 @@
         </v-menu>
 
       </v-system-bar>
-      <v-content>
+      <v-main>
         <v-container>
           <v-select v-model="selectedBoard" @change="filterByBoardId(selectedBoard)" :items="boards"
             label="Choose a board" item-text="name" item-value="id">
@@ -114,7 +114,7 @@
             <v-icon class="mt-6" @click="undo" color="#039BE5">mdi-undo-variant</v-icon>
           </v-snackbar>
         </v-container>
-      </v-content>
+      </v-main>
     </v-app>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>

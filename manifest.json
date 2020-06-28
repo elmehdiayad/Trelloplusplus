@@ -1,9 +1,13 @@
 {
   "name": "Trello++",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "manifest_version": 2,
   "description": "Trello++ helps you use trello as a developer",
-  "icons": { "16": "images/logo16.png", "48": "images/logo48.png", "128": "images/logo128.png" },
+  "icons": {
+    "16": "images/logo16.png",
+    "48": "images/logo48.png",
+    "128": "images/logo128.png"
+  },
   "background": {
     "scripts": ["background.js"],
     "persistent": false
@@ -11,8 +15,9 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["lib/hashSearch.js"],
-      "run_at": "document_idle"
+      "js": ["lib/hashSearch.js", "scrummer/scrummer.js"],
+      "css": ["scrummer/scrummer.css"],
+      "run_at": "document_end"
     }
   ],
   "browser_action": {

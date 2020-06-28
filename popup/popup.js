@@ -69,7 +69,7 @@ new Vue({
     fetching: false,
     undoing: false,
     POINTS_SCALE: ["X", 0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100],
-    showAll: JSON.parse(localStorage.getItem("show_all")),
+    //showAll: JSON.parse(localStorage.getItem("show_all")),
   },
   watch: {
     filtredCards: {
@@ -118,11 +118,11 @@ new Vue({
       },
       deep: true,
     },
-    showAll: {
-      handler: function (showAll) {
-        this.mShowAll(showAll);
-      },
-    },
+    // showAll: {
+    //   handler: function (showAll) {
+    //     this.showAllCards(showAll);
+    //   },
+    // },
   },
 
   methods: {
@@ -148,18 +148,17 @@ new Vue({
       });
     },
     filterByBoardId: function (boardId) {
-      this.showAll = false;
+      //this.showAll = false;
       this.selectedBoard = boardId;
       this.filtredCards = this.cards.filter((card) => card.idBoard === boardId);
-      let cardListIds = this.filtredCards.map((card) => card.idList);
+      const cardListIds = this.filtredCards.map((card) => card.idList);
       this.lists = this.boards.filter((board) => board.id === boardId)[0].lists;
       this.filtredLists = this.lists
         .filter((list) => list.idBoard == boardId)
         .filter((list) => cardListIds.includes(list.id));
-      this.selectedList = "";
+      this.selectedList = this.filtredLists[0].id;
     },
     filterByListId: function (listId) {
-      this.mShowAll(this.showAll);
       this.selectedList = listId;
       this.filtredCards = this.cards.filter((card) => card.idList === listId);
       this.destinationLists = this.lists.filter((list) => list.id !== listId);
@@ -199,9 +198,9 @@ new Vue({
       );
       this.selectedList = this.filtredLists[0].id;
     },
-    // test: function (card) {
-    //   console.log(card);
-    // },
+    test: function (card) {
+      console.log(card);
+    },
     estimate: function (point, cardId) {
       this.filtredCards.map((card) => {
         if (card.id === cardId) {
@@ -234,26 +233,22 @@ new Vue({
         }
       });
     },
-    mShowAll: function (showAll) {
-      localStorage.setItem("show_all", showAll);
-      if (showAll) {
-        this.filtredLists = this.lists;
-        new Promise((resolve) => {
-          Trello.get("boards/" + this.selectedBoard + "/cards", function (
-            cards
-          ) {
-            resolve(cards);
-          });
-        }).then((cards) => {
-          this.filtredCards = cards.filter(
-            (card) => card.idList === this.selectedList
-          );
-        });
-      } else {
-        this.filtredCards = this.cards.filter(
-          (card) => card.idList === this.selectedList
-        );
-      }
-    },
+    // showAllCards: function (showAll) {
+    //   localStorage.setItem("show_all", showAll);
+    //   this.filtredLists = this.lists;
+    //   if (showAll) {
+    //     new Promise((resolve) => {
+    //       Trello.get("boards/" + this.selectedBoard + "/cards", function (
+    //         cards
+    //       ) {
+    //         resolve(cards);
+    //       });
+    //     }).then((cards) => {
+    //       this.cards = cards;
+    //     });
+    //   } else {
+    //     this.fetch()
+    //   }
+    // },
   },
 });
